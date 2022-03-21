@@ -184,7 +184,7 @@ public class RmiServer {
     public static void main(String[] args) throws Exception{
         System.out.println("Creating RMI Registry, RMI Port: 1099");
         Registry registry = LocateRegistry.createRegistry(1099);
-        System.setProperty("java.rmi.server.hostname","0.0.0.0");
+        System.setProperty("java.rmi.server.hostname","0.0.0.0"); //本地测试的时候是0.0.0.0，如果是服务器利用的时候改成VPS的外网IP地址，否则会客户端会加载0.0.0.0
 
         registry.bind("tomcat_el",RmiServer.tomcat_EL());
         registry.bind("tomcat_el_runtime",RmiServer.tomcat_EL_Runtime());
